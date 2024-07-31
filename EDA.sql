@@ -16,37 +16,37 @@ FROM layoffs_staging2
 GROUP BY industry
 ORDER BY industry_total_laid DESC;
 
-SELECT MIN(`date`) AS start_date, MAX(`date`) AS end_date
-FROM layoffs_staging2;
+-- Total laid offs by yearly
+SELECT YEAR(`date`) AS the_year, SUM(total_laid_off) AS yearly_laid_offs
+FROM layoffs_staging2
+GROUP BY the_year
+ORDER BY the_year DESC;
 
+-- Company yearly laid offs
 SELECT company, YEAR(`date`) AS laid_off_year, SUM(total_laid_off) AS laid_off
 FROM layoffs_staging2
-GROUP BY company, YEAR(`date`)
-ORDER BY company, laid_off_year, laid_off DESC;
+GROUP BY YEAR(`date`), company
+HAVING laid_off != 0
+ORDER BY company, laid_off_year;
 
-SELECT company, SUM(total_laid_off) 
-FROM layoffs_staging2 
-WHERE YEAR(`date`) = 2020
-GROUP BY company;
+-- Industry yearly laid offs
+SELECT industry, YEAR(`date`) AS laid_off_year, SUM(total_laid_off) AS laid_off
+FROM layoffs_staging2
+GROUP BY YEAR(`date`), industry
+HAVING laid_off != 0
+ORDER BY industry, laid_off_year;
 
-WITH Year_2020 AS 
-(
-	SELECT company, SUM(total_laid_off) 
-	FROM layoffs_staging2 
-	WHERE YEAR(`date`) = 2020
-	GROUP BY company
-),
-Year_2021 AS 
-(
-	SELECT company, SUM(total_laid_off) AS 
-	FROM layoffs_staging2 
-	WHERE YEAR(`date`) = 2021
-	GROUP BY company
-)
-SELECT *
-FROM Year_2020
-JOIN Year_2021
-	ON Year_2020.company = Year_2021.company;
+-- Country yearly laid offs
+SELECT country, YEAR(`date`) AS laid_off_year, SUM(total_laid_off) AS laid_off
+FROM layoffs_staging2
+GROUP BY YEAR(`date`), country
+HAVING laid_off != 0
+ORDER BY country, laid_off_year;
+
+
+
+
+
 
 
 
