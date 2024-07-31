@@ -89,5 +89,17 @@ WHERE total_laid_off IS NULL AND percentage_laid_off IS NULL;
 ALTER TABLE layoffs_staging2
 DROP COLUMN row_num;
 
+SELECT t1.company, t1.stage, t2.company, t2.stage
+FROM layoffs_staging2 t1
+JOIN layoffs_staging2 t2
+	ON t1.company = t2.company
+WHERE t1.stage = 'Unknown' AND t2.stage != 'Unknown';
+
+UPDATE layoffs_staging2 t1
+JOIN layoffs_staging2 t2
+	ON t1.company = t2.company
+SET t1.stage = t2.stage
+WHERE t1.stage = 'Unknown' AND t2.stage != 'Unknown';
+
 SELECT *
 FROM layoffs_staging2;
