@@ -101,5 +101,6 @@ JOIN layoffs_staging2 t2
 SET t1.stage = t2.stage
 WHERE t1.stage = 'Unknown' AND t2.stage != 'Unknown';
 
-SELECT *
-FROM layoffs_staging2;
+UPDATE layoffs_staging2
+SET total_laid_off = 0
+WHERE total_laid_off IS NULL;
